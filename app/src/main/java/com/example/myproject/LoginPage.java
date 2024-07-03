@@ -1,48 +1,82 @@
 package com.example.myproject;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import android.widget.EditText;
+import android.widget.Button;
+import android.widget.TextView;
+import android.view.View;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.util.Patterns;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.AuthResult;
+import androidx.annotation.NonNull;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class LoginPage extends AppCompatActivity {
 
-    android.widget.EditText username,password;
-    android.widget.Button loginbtn,forgotpassword;
-    android.widget.TextView signuplink;
-
+    EditText username, loginpassword;
+    Button loginbtn, forgotpassword;
+    TextView signuplink;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+        // EdgeToEdge.enable(this); // Ensure this is a valid class or remove if not needed
         setContentView(R.layout.activity_login_page);
-        username = findViewById(com.example.myproject.R.id.usernamelogin);
-        password = findViewById(com.example.myproject.R.id.passwordlogin);
-        forgotpassword = findViewById(com.example.myproject.R.id.forgot_password);
-        loginbtn = findViewById(com.example.myproject.R.id.login);
-        signuplink = findViewById(com.example.myproject.R.id.signuplink);
 
-        signuplink.setOnClickListener(new android.view.View.OnClickListener() {
+        username = findViewById(R.id.usernamelogin);
+        loginpassword = findViewById(R.id.passwordlogin);
+        forgotpassword = findViewById(R.id.forgot_password);
+        loginbtn = findViewById(R.id.login);
+        signuplink = findViewById(R.id.signuplink);
+        mAuth = FirebaseAuth.getInstance();
+
+        signuplink.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(android.view.View v) {
-                android.content.Intent intent = new android.content.Intent(LoginPage.this,MainActivity.class);
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginPage.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
 
-        forgotpassword.setOnClickListener(new android.view.View.OnClickListener() {
+        forgotpassword.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(android.view.View v) {
-                android.content.Intent intent = new android.content.Intent(LoginPage.this, MainActivity.class);
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginPage.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
+
+        loginbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkuser();
+            }
+        });
+    }
+
+    public void checkuser() {
+        String email = username.getText().toString().trim();
+        String password = loginpassword.getText().toString().trim();
+
+
+        if (TextUtils.isEmpty(email) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            username.setError("Valid email is required");
+            return;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            this.loginpassword.setError("Password is required");
+            return;
+        }
+
+
 
     }
 }
