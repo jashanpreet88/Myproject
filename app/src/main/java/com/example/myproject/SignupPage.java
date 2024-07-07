@@ -85,7 +85,7 @@ public class SignupPage extends AppCompatActivity {
             return;
         }
 
-//create user with email and password
+//create user with email and passwordd
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
