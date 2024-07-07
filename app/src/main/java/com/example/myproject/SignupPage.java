@@ -1,15 +1,14 @@
 package com.example.myproject;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import androidx.annotation.NonNull;
 
 public class SignupPage extends AppCompatActivity {
 
@@ -86,8 +85,48 @@ public class SignupPage extends AppCompatActivity {
             return;
         }
 
+//create user with email and password
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // User registration success
+                    com.google.firebase.auth.FirebaseUser user = mAuth.getCurrentUser();
+                    String userId = user.getUid();
+                    User newUser = new User(name, email);
 
-
-
+                    // Save user data to database
+                    UsersDB.child(userId).setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                android.widget.Toast.makeText(SignupPage.this, "Registration successful!", android.widget.Toast.LENGTH_SHORT).show();
+                                startActivity(new android.content.Intent(SignupPage.this, MainActivity.class));
+                                finish();
+                            } else {
+                                android.widget.Toast.makeText(SignupPage.this, "Failed to save user data.", android.widget.Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    // User registration failed
+                    String errorMessage = "Authentication failed.";
+                    try {
+                        throw task.getException();
+                    } catch (com.google.firebase.auth.FirebaseAuthWeakPasswordException e) {
+                        errorMessage = "Weak password.";
+                    } catch (com.google.firebase.auth.FirebaseAuthInvalidCredentialsException e) {
+                        errorMessage = "Invalid email.";
+                    } catch (com.google.firebase.auth.FirebaseAuthUserCollisionException e) {
+                        errorMessage = "User with this email already exists.";
+                    } catch (Exception e) {
+                        errorMessage = e.getMessage();
+                    }
+                    android.widget.Toast.makeText(SignupPage.this, errorMessage, android.widget.Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
+
+
 }
