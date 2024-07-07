@@ -101,7 +101,7 @@ public class SignupPage extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 android.widget.Toast.makeText(SignupPage.this, "Registration successful!", android.widget.Toast.LENGTH_SHORT).show();
-                                startActivity(new android.content.Intent(SignupPage.this, MainActivity.class));
+                                startActivity(new android.content.Intent(SignupPage.this, LoginPage.class));
                                 finish();
                             } else {
                                 android.widget.Toast.makeText(SignupPage.this, "Failed to save user data.", android.widget.Toast.LENGTH_SHORT).show();
