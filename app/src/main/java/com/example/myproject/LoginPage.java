@@ -25,7 +25,7 @@ public class LoginPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // EdgeToEdge.enable(this); // Ensure this is a valid class or remove if not needed
+
         setContentView(R.layout.activity_login_page);
 
         username = findViewById(R.id.usernamelogin);
@@ -75,6 +75,35 @@ public class LoginPage extends AppCompatActivity {
             this.loginpassword.setError("Password is required");
             return;
         }
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Login success
+                        com.google.firebase.auth.FirebaseUser user = mAuth.getCurrentUser();
+                        Intent intent;
+                        if (user != null && "manager@gmail.com".equals(user.getEmail())) {
+                            intent = new Intent(LoginPage.this, MainActivity.class);
+                        } else {
+                            intent = new Intent(LoginPage.this, MainActivity.class);
+                        }
+                        startActivity(intent);
+                        finish();
+                    } else {
+
+                        String errorMessage = "Authentication failed.";
+                        try {
+                            throw task.getException();
+                        } catch (com.google.firebase.auth.FirebaseAuthInvalidUserException e) {
+                            errorMessage = "User does not exist.";
+                        } catch (com.google.firebase.auth.FirebaseAuthInvalidCredentialsException e) {
+                            errorMessage = "Invalid password.";
+                        } catch (Exception e) {
+                            errorMessage = e.getMessage();
+                        }
+                        android.widget.Toast.makeText(LoginPage.this, errorMessage, android.widget.Toast.LENGTH_LONG).show();
+                    }
+                });
 
 
 
