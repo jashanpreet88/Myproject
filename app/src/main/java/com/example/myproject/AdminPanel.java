@@ -18,7 +18,7 @@ public class AdminPanel extends AppCompatActivity {
      android.net.Uri imageUri;
      FirebaseFirestore db;
      FirebaseStorage storage;
-     List<Hotel> hotelList;
+     java.util.List<Hotel> hotelList;
      HotelAdapter hotelAdapter;
      String selectedHotelId;
 
