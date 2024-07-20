@@ -33,5 +33,21 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
 
-}
+        if (itemId == R.id.menu_profile) {
+            startActivity(new android.content.Intent(MainActivity.this, ProfilePage.class));
+            return true;
+        } else if (itemId == R.id.menu_sign_out) {
+            startActivity(new android.content.Intent(MainActivity.this, SignOutPage.class));
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
+
+    }
+
+    }
