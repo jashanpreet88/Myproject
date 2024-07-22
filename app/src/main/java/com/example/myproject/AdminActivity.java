@@ -9,7 +9,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class AdminActivity extends AppCompatActivity {
-
+    private android.widget.Button add_hotel_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +18,14 @@ public class AdminActivity extends AppCompatActivity {
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         setTitle(" Admin Room-Rover");
+        add_hotel_btn = findViewById(com.example.myproject.R.id.add_hotel_btn);
+
+        add_hotel_btn.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                android.content.Intent intent = new android.content.Intent(AdminActivity.this,AddHotel.class);
+            }
+        });
 
     }
 
@@ -41,4 +49,5 @@ public class AdminActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
 }
