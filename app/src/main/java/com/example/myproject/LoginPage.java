@@ -81,13 +81,13 @@ public class LoginPage extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Login success
                         com.google.firebase.auth.FirebaseUser user = mAuth.getCurrentUser();
-                        Intent intent;
-                        if (user != null && "manager@gmail.com".equals(user.getEmail())) {
-                            intent = new Intent(LoginPage.this, MainActivity.class);
-                        } else {
-                            intent = new Intent(LoginPage.this, MainActivity.class);
-                        }
+                        if(email.equals("manager@gmail.com")){
+                        Intent intent  = new android.content.Intent(LoginPage.this,AdminActivity.class);
                         startActivity(intent);
+                        }else {
+                            Intent intent  = new android.content.Intent(LoginPage.this,MainActivity.class);
+                            startActivity(intent);
+                        }
                         finish();
                     } else {
 
