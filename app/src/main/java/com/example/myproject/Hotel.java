@@ -6,16 +6,18 @@ public class Hotel {
     private String location;
     private double rating;
     private String imageUrl;
-
+    double pricePerNight;
+    boolean availablity;
     public Hotel() {
-        // Empty constructor needed for Firestore
     }
 
-    public Hotel(String name, String location, double rating, String imageUrl) {
+    public Hotel(String name, String location, double rating, String imageUrl,double pricePerNight,boolean availabilty) {
         this.name = name;
         this.location = location;
         this.rating = rating;
         this.imageUrl = imageUrl;
+        this.pricePerNight = pricePerNight;
+        this.availablity= availabilty;
     }
 
     // Getters and Setters
@@ -33,4 +35,14 @@ public class Hotel {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public double getPricePerNight() {return pricePerNight;}
+
+    public void setPricePerNight(double pricePerNight) {this.pricePerNight = pricePerNight;}
+
+    public boolean isAvailablity() {return availablity;}
+
+    public void setAvailablity(boolean availablity) {this.availablity = availablity;}
 }
+
+
