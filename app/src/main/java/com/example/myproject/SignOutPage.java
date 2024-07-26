@@ -29,6 +29,15 @@ public class SignOutPage extends AppCompatActivity {
                 finish();
             }
         });
-
+        mAuth = FirebaseAuth.getInstance();
+        button_sign_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                Intent intent = new Intent(SignOutPage.this, LoginPage.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }
