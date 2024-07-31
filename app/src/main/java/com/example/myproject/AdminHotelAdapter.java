@@ -1,4 +1,4 @@
 package com.example.myproject;
 
-public class AdminHotelAdapter {
+public class AdminHotelAdapter extends android.widget.BaseAdapter {
 }
