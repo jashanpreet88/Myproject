@@ -26,6 +26,17 @@ public class ViewHotelActivity extends AppCompatActivity {
         hotel_image = findViewById(com.example.myproject.R.id.hotel_image);
         HotelsDB = com.google.firebase.database.FirebaseDatabase.getInstance().getReference("hotels");
         if(hotelId!=null){
+            HotelsDB.child(hotelId).addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+                @Override
+                public void onDataChange(@androidx.annotation.NonNull com.google.firebase.database.DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onCancelled(@androidx.annotation.NonNull com.google.firebase.database.DatabaseError error) {
+
+                }
+            });
 
         }
 
