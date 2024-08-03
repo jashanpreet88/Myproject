@@ -10,15 +10,24 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class ViewHotelActivity extends AppCompatActivity {
 
+    String hotelId;
+    com.google.firebase.database.DatabaseReference HotelsDB;
+    android.widget.TextView hotel_name,hotel_location,hotel_rating,hotel_pricePerNight,hotel_available;
+    android.widget.ImageView hotel_image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_view_hotel);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        hotel_name =findViewById(com.example.myproject.R.id.hotel_name);
+        hotel_location = findViewById(com.example.myproject.R.id.hotel_location);
+        hotel_rating = findViewById(com.example.myproject.R.id.hotel_rating);
+        hotel_pricePerNight = findViewById(com.example.myproject.R.id.hotel_pricePerNight);
+        hotel_available = findViewById(com.example.myproject.R.id.hotel_available);
+        hotel_image = findViewById(com.example.myproject.R.id.hotel_image);
+        HotelsDB = com.google.firebase.database.FirebaseDatabase.getInstance().getReference("hotels");
+        if(hotelId!=null){
+
+        }
+
     }
 }
