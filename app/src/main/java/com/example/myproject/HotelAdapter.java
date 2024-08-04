@@ -1,15 +1,28 @@
 package com.example.myproject;
+import android.content.Context;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class HotelAdapter extends android.widget.BaseAdapter {
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
-    private android.content.Context context;
-    private java.util.List<Hotel>hotels;
-    private com.google.firebase.database.DatabaseReference HotelsDB;
+import java.util.List;
 
-    public  HotelAdapter(android.content.Context context, java.util.List<Hotel>hotels){
-        this.context=context;
-        this.hotels=hotels;
-        HotelsDB = com.google.firebase.database.FirebaseDatabase.getInstance().getReference("hotels");
+public class HotelAdapter extends BaseAdapter {
+    private Context context;
+    private List<Hotel> hotels;
+    private DatabaseReference HotelsDB;
+
+    public HotelAdapter(Context context, List<Hotel> hotels) {
+        this.context = context;
+        this.hotels = hotels;
+        HotelsDB = FirebaseDatabase.getInstance().getReference("hotels");
     }
     @Override
     public int getCount() {
@@ -27,18 +40,26 @@ public class HotelAdapter extends android.widget.BaseAdapter {
     }
 
     @Override
-    public android.view.View getView(int i, android.view.View view, android.view.ViewGroup viewGroup) {
-
+    public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = android.view.LayoutInflater.from(context).inflate(R.layout.hotel_item, viewGroup, false);
+            view = LayoutInflater.from(context).inflate(R.layout.hotel_item, viewGroup, false);
         }
         final Hotel hotel = hotels.get(i);
-        android.widget.ImageView imageView = view.findViewById(R.id.hotel_image);
-        android.widget.TextView textView = view.findViewById(R.id.hotel_name);
-        com.squareup.picasso.Picasso.get()
+        ImageView imageView = view.findViewById(R.id.hotel_image);
+        TextView textView = view.findViewById(R.id.hotel_name);
+        Picasso.get()
                 .load(hotel.getImageUrl())
                 .into(imageView);
         textView.setText(hotel.getName());
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ViewHotelActivity.class);
+                intent.putExtra("hotel_id", hotel.getId());
+                context.startActivity(intent);
+            }
+        });
 
         return view;
     }
