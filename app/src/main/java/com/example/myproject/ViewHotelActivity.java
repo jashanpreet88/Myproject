@@ -95,33 +95,6 @@ public class ViewHotelActivity extends AppCompatActivity {
             });
         }
 
-        btn_book.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if(currentUser != null){
-                    String userId = currentUser.getUid();
-                    if(available != null && available){
-                        Hotel hotel = new Hotel(name, location, rating, imageUrl, pricePerNight, available);
-                        BookingsDB.child(userId).setValue(hotel).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(ViewHotelActivity.this, "Booking success", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(ViewHotelActivity.this, "Booking fail", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }else {
-                        Toast.makeText(ViewHotelActivity.this, "This hotel not available", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            }
-        });
-
 
     }
 }
