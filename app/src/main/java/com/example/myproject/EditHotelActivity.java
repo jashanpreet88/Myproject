@@ -36,6 +36,41 @@ public class EditHotelActivity extends AppCompatActivity {
                 updateHotel();
             }
         });
+
+        hotelId = getIntent().getStringExtra("hotel_id");
+        HotelsDB = com.google.firebase.database.FirebaseDatabase.getInstance().getReference("hotels");
+        if(hotelId != null){
+            HotelsDB.child(hotelId).addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+                @Override
+                public void onDataChange(@androidx.annotation.NonNull com.google.firebase.database.DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String name = snapshot.child("name").getValue(String.class);
+                        String location = snapshot.child("location").getValue(String.class);
+                        Double rating = snapshot.child("rating").getValue(Double.class);
+                        Double pricePerNight = snapshot.child("pricePerNight").getValue(Double.class);
+                        String imageUrl = snapshot.child("imageUrl").getValue(String.class);
+                        Boolean available = snapshot.child("available").getValue(Boolean.class);
+                        hotel_name.setText(name);
+                        hotel_location.setText(location);
+                        hotel_rating.setText(String.valueOf(rating));
+                        hotel_pricePerNight.setText(String.valueOf(pricePerNight));
+                        hotel_image_url.setText(imageUrl);
+                        if (available != null && available) {
+                            hotelAvailableCheckbox.setChecked(true);
+                        } else {
+                            hotelAvailableCheckbox.setChecked(false);
+                        }
+                    } else {
+                        android.widget.Toast.makeText(EditHotelActivity.this, "No data", android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@androidx.annotation.NonNull com.google.firebase.database.DatabaseError error) {
+
+                }
+            });
+        }
     }
         private void updateHotel () {
             String name = hotel_name.getText().toString().trim();
