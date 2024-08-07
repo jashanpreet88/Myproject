@@ -54,12 +54,23 @@ public class AdminHotelAdapter extends BaseAdapter {
                 .into(imageView);
         textView.setText(hotel.getName());
         Button btn_view = view.findViewById(R.id.btn_view);
+        Button btn_edit = view.findViewById(R.id.btn_edit);
+        Button btn_delete = view.findViewById(R.id.btn_delete);
 
 
         btn_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ViewHotelActivity.class);
+                intent.putExtra("hotel_id", hotel.getId());
+                context.startActivity(intent);
+            }
+        });
+
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, EditHotelActivity.class);
                 intent.putExtra("hotel_id", hotel.getId());
                 context.startActivity(intent);
             }
