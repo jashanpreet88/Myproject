@@ -75,8 +75,14 @@ public class AdminHotelAdapter extends BaseAdapter {
                 context.startActivity(intent);
             }
         });
-
-
+        btn_delete.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                Intent intent = new Intent(context,DeleteHotelActivity.class);
+                intent.putExtra("hotel_id", hotel.getId());
+                context.startActivity(intent);
+            }
+        });
 
         return view;
     }
