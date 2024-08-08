@@ -37,7 +37,13 @@ public class DeleteHotelActivity extends AppCompatActivity {
                         android.widget.Toast.makeText(DeleteHotelActivity.this, "Hotel deleted successfully", android.widget.Toast.LENGTH_SHORT).show();
                         finish();
                     }
-                })
+                }).addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener() {
+                    @Override
+                    public void onFailure(@androidx.annotation.NonNull Exception e) {
+                        android.widget.Toast.makeText(DeleteHotelActivity.this, "Hotel deleted failed", android.widget.Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
             }
         });
     }
