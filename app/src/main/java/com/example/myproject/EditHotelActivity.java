@@ -14,9 +14,9 @@ public class EditHotelActivity extends AppCompatActivity {
     com.google.firebase.database.DatabaseReference HotelsDB;
     android.widget.EditText hotel_name, hotel_location, hotel_rating, hotel_pricePerNight, hotel_available, hotel_image_url;
     android.widget.CheckBox hotelAvailableCheckbox;
-    android.widget.Button button_update;
+    android.widget.Button button_update,button_back;
     private com.google.firebase.database.DatabaseReference hotelsReference;
-
+    @android.annotation.SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +29,14 @@ public class EditHotelActivity extends AppCompatActivity {
         hotelAvailableCheckbox = findViewById(R.id.hotel_available_checkbox);
         hotel_image_url = findViewById(R.id.hotel_image_url_edittext);
         button_update = findViewById(R.id.update_hotel_btn);
+        button_back = findViewById(com.example.myproject.R.id.backbtn);
+
+        button_back.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                finish();
+            }
+        });
 
         button_update.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
