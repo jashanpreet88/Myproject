@@ -28,5 +28,17 @@ public class DeleteHotelActivity extends AppCompatActivity {
                 finish();
             }
         });
+        button_delete.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                HotelsDB.child(hotelId).removeValue().addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@androidx.annotation.NonNull com.google.android.gms.tasks.Task<Void> task) {
+                        android.widget.Toast.makeText(DeleteHotelActivity.this, "Hotel deleted successfully", android.widget.Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                })
+            }
+        });
     }
 }
