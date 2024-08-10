@@ -56,7 +56,7 @@ public class ViewHotelActivity extends AppCompatActivity {
         btn_book = findViewById(R.id.btn_book);
         hotelId = getIntent().getStringExtra("hotel_id");
         HotelsDB = FirebaseDatabase.getInstance().getReference("hotels");
-        BookingsDB = FirebaseDatabase.getInstance().getReference("bookings");
+        BookingsDB = FirebaseDatabase.getInstance().getReference("booking");
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         if(hotelId != null){
@@ -94,6 +94,31 @@ public class ViewHotelActivity extends AppCompatActivity {
                 }
             });
         }
+        btn_book.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                if(currentUser != null){
+                    String userId = currentUser.getUid();
+                    if(available != null && available){
+                        Hotel hotel = new Hotel(name, location, rating, imageUrl, pricePerNight, available);
+                        BookingsDB.child(userId).child(hotelId).setValue(hotel).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(ViewHotelActivity.this, "Booking success", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(ViewHotelActivity.this, "Booking fail", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else {
+                        Toast.makeText(ViewHotelActivity.this, "This hotel not available", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+        });
 
 
     }
