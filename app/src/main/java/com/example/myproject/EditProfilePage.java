@@ -57,7 +57,13 @@ public class EditProfilePage extends AppCompatActivity {
                                 android.widget.Toast.makeText(EditProfilePage.this, "User name updated", android.widget.Toast.LENGTH_SHORT).show();
                             }
 
-                        })
+                        }).addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener() {
+                            @Override
+                            public void onFailure(@androidx.annotation.NonNull Exception e) {
+
+                                android.widget.Toast.makeText(EditProfilePage.this, "User name update failed", android.widget.Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }
             });
