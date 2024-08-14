@@ -15,7 +15,8 @@ public class EditProfilePage extends AppCompatActivity {
     private com.google.firebase.auth.FirebaseAuth mAuth;
     private String userId;
     private android.widget.EditText etUsername;
-    private android.widget.Button btnEdit;
+    private android.widget.Button btnEdit ,backbtn;
+    @android.annotation.SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +26,14 @@ public class EditProfilePage extends AppCompatActivity {
         UsersDB = com.google.firebase.database.FirebaseDatabase.getInstance().getReference("users");
         etUsername = findViewById(R.id.tvUsername);
         btnEdit = findViewById(R.id.btnEdit);
+        backbtn =findViewById(com.example.myproject.R.id.gobtn);
 
+        backbtn.setOnClickListener(new android.view.View.OnClickListener() {
+            @Override
+            public void onClick(android.view.View v) {
+                finish();
+            }
+        });
         if (currentUser != null) {
             userId = currentUser.getUid();
             UsersDB.child(userId).child("name").addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
