@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfilePage extends AppCompatActivity {
     TextView textView_username, textView_email;
-    Button button_go_back;
+    Button button_go_back,button_go_edit;
     DatabaseReference UsersDB;
     FirebaseUser currentUser;
     FirebaseAuth mAuth;
@@ -37,11 +37,19 @@ public class ProfilePage extends AppCompatActivity {
         textView_username = findViewById(R.id.userName);
         textView_email = findViewById(R.id.userEmail);
         button_go_back = findViewById(R.id.btn_go_back);
-
+        button_go_edit = findViewById(R.id.btn_go_edit_profile);
         button_go_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        button_go_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.content.Intent intent = new android.content.Intent(ProfilePage.this, EditProfilePage.class);
+                startActivity(intent);
             }
         });
         mAuth = FirebaseAuth.getInstance();
