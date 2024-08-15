@@ -102,5 +102,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+        private void fetchWeatherData(){
+            okhttp3.OkHttpClient client = new okhttp3.OkHttpClient();
+            okhttp3.Request request = new okhttp3.Request.Builder().url(WEATHER_URL).build();
+            client.newCall(request).enqueue(new okhttp3.Callback() {
+                @Override
+                public void onFailure(okhttp3.Call call, java.io.IOException e) {
+                    runOnUiThread(()->Toast.makeText(MainActivity.this, "Failed to load weather data", Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
+                    if (response.isSuccessful()) {
+                        String responseData = response.body().string();
+                        runOnUiThread(() -> updateWeatherUI(responseData));
+                }
+            });
+        }
 
 }
