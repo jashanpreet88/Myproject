@@ -29,16 +29,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    Button button_profile;
-    DatabaseReference HotelsDB;
+    private static final String API_KEY = "52efd2b5e04dddf397b7836827933f94\n";
+    private static final String WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?q=montreal&appid=" + API_KEY + "&units=metric";
+    private Button button_profile;
+    private DatabaseReference HotelsDB;
+    private android.widget.TextView weatherTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        setTitle("RoomOver");
+        setTitle("Room-Rover");
+        weatherTextView = findViewById(R.id.weatherTextView);
 
+        fetchWeatherData();
         ListView listView = findViewById(R.id.listView);
         List<Hotel> hotels = new ArrayList<>();
         HotelAdapter adapter = new HotelAdapter(this, hotels);
@@ -96,5 +101,6 @@ public class MainActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
 
 }
