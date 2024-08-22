@@ -41,6 +41,9 @@ public class ViewHotelActivity extends AppCompatActivity {
             hotel_available;
     ImageView hotel_image;
     Button btn_book;
+    private android.widget.EditText checkInDate, checkOutDate;
+    private java.util.Calendar calendar;
+    private int year, month, day;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,8 @@ public class ViewHotelActivity extends AppCompatActivity {
         BookingsDB = FirebaseDatabase.getInstance().getReference("booking");
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+        android.view.View checkInDate = findViewById(com.example.myproject.R.id.check_in_date);
+        checkOutDate = findViewById(R.id.check_out_date);
         if(hotelId != null){
             HotelsDB.child(hotelId).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -93,30 +98,33 @@ public class ViewHotelActivity extends AppCompatActivity {
 
                 }
             });
+
+
         }
+
+        calendar = java.util.Calendar.getInstance();
+        year = calendar.get(java.util.Calendar.YEAR);
+        month = calendar.get(java.util.Calendar.MONTH);
+        day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
+        checkInDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog(checkInDate);
+            }
+        });
+
+        checkOutDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog(checkOutDate);
+            }
+        });
+
         btn_book.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
-                if(currentUser != null){
-                    String userId = currentUser.getUid();
-                    if(available != null && available){
-                        Hotel hotel = new Hotel(name, location, rating, imageUrl, pricePerNight, available);
-                        BookingsDB.child(userId).child(hotelId).setValue(hotel).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(ViewHotelActivity.this, "Booking success", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(ViewHotelActivity.this, "Booking fail", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }else {
-                        Toast.makeText(ViewHotelActivity.this, "This hotel not available", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
+               android.content.Intent intent = new android.content.Intent(ViewHotelActivity.this,HotelBookingActivity.class);
+               startActivity(intent);
             }
         });
 
