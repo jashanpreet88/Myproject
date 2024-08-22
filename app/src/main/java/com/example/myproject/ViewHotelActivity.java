@@ -1,19 +1,18 @@
 package com.example.myproject;
 
-import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,92 +25,104 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
+
 public class ViewHotelActivity extends AppCompatActivity {
-    String hotelId;
-    String name, location, imageUrl;
-    Double rating, pricePerNight;
-    Boolean available;
-    DatabaseReference HotelsDB, BookingsDB;
-    FirebaseUser currentUser;
-    FirebaseAuth mAuth;
-    TextView hotel_name,
-            hotel_location,
-            hotel_rating,
-            hotel_pricePerNight,
-            hotel_available;
-    ImageView hotel_image;
-    Button btn_book;
-    private android.widget.EditText checkInDate, checkOutDate;
-    private java.util.Calendar calendar;
+    private String hotelId;
+    private String name, location, imageUrl;
+    private Double rating, pricePerNight;
+    private Boolean available;
+    private DatabaseReference hotelsDB, bookingsDB;
+    private FirebaseUser currentUser;
+    private FirebaseAuth mAuth;
+
+    private TextView hotelName, hotelLocation, hotelRating, hotelPricePerNight, hotelAvailable;
+    private ImageView hotelImage;
+    private EditText checkInDate, checkOutDate;
+    private Button btnBook;
+    private RatingBar ratingBar;
+
+    private Calendar calendar;
     private int year, month, day;
-    @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_hotel);
 
-        hotel_name = findViewById(R.id.hotel_name);
-        hotel_location = findViewById(R.id.hotel_location);
-        hotel_rating = findViewById(R.id.hotel_rating);
-        hotel_pricePerNight = findViewById(R.id.hotel_pricePerNight);
-        hotel_available = findViewById(R.id.hotel_available);
-        hotel_image = findViewById(R.id.hotel_image);
-        btn_book = findViewById(R.id.btn_book);
-        hotelId = getIntent().getStringExtra("hotel_id");
-        HotelsDB = FirebaseDatabase.getInstance().getReference("hotels");
-        BookingsDB = FirebaseDatabase.getInstance().getReference("booking");
+
+        hotelName = findViewById(R.id.hotel_name);
+        hotelLocation = findViewById(R.id.hotel_location);
+        hotelRating = findViewById(R.id.hotel_rating);
+        hotelPricePerNight = findViewById(R.id.hotel_pricePerNight);
+        hotelAvailable = findViewById(R.id.hotel_available);
+        hotelImage = findViewById(R.id.hotel_image);
+        checkInDate = findViewById(R.id.check_in_date);
+        checkOutDate = findViewById(R.id.check_out_date);
+        btnBook = findViewById(R.id.btn_book);
+        ratingBar = findViewById(R.id.ratingBar);
+
+
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        android.view.View checkInDate = findViewById(com.example.myproject.R.id.check_in_date);
-        checkOutDate = findViewById(R.id.check_out_date);
-        if(hotelId != null){
-            HotelsDB.child(hotelId).addValueEventListener(new ValueEventListener() {
+        hotelsDB = FirebaseDatabase.getInstance().getReference("hotels");
+        bookingsDB = FirebaseDatabase.getInstance().getReference("bookings");
+
+
+        hotelId = getIntent().getStringExtra("hotel_id");
+
+        if (hotelId != null) {
+
+            hotelsDB.child(hotelId).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
+                        // Retrieve hotel data
                         name = snapshot.child("name").getValue(String.class);
                         location = snapshot.child("location").getValue(String.class);
                         rating = snapshot.child("rating").getValue(Double.class);
                         pricePerNight = snapshot.child("pricePerNight").getValue(Double.class);
                         imageUrl = snapshot.child("imageUrl").getValue(String.class);
                         available = snapshot.child("available").getValue(Boolean.class);
-                        hotel_name.setText(name);
-                        hotel_location.setText("Location: " + location);
-                        hotel_rating.setText("Rating: " + String.valueOf(rating));
-                        hotel_pricePerNight.setText("Price per night(CAD): " + String.valueOf(pricePerNight));
-                        if(available != null && available){
-                            hotel_available.setText("Available");
-                        }else {
-                            hotel_available.setText("Not available");
-                        }
 
-                        Picasso.get()
-                                .load(imageUrl)
-                                .into(hotel_image);
+
+                        hotelName.setText(name);
+                        hotelLocation.setText("Location: " + location);
+                        hotelRating.setText("Rating: " + String.valueOf(rating));
+                        hotelPricePerNight.setText("Price per night (CAD): " + String.valueOf(pricePerNight));
+                        hotelAvailable.setText(available != null && available ? "Available" : "Not available");
+
+                        if (imageUrl != null && !imageUrl.isEmpty()) {
+                            Picasso.get()
+                                    .load(imageUrl)
+//                                    .placeholder(R.drawable.placeholder_image) // Placeholder image
+                                    .into(hotelImage);
+                        }
                     } else {
-                        Toast.makeText(ViewHotelActivity.this, "No data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ViewHotelActivity.this, "No data available", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Toast.makeText(ViewHotelActivity.this, "Failed to load data: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-
-
         }
 
-        calendar = java.util.Calendar.getInstance();
-        year = calendar.get(java.util.Calendar.YEAR);
-        month = calendar.get(java.util.Calendar.MONTH);
-        day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
+
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+
         checkInDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDatePickerDialog(checkInDate);
             }
         });
+
 
         checkOutDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,28 +131,67 @@ public class ViewHotelActivity extends AppCompatActivity {
             }
         });
 
-        btn_book.setOnClickListener(new android.view.View.OnClickListener() {
+        btnBook.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(android.view.View v) {
-               android.content.Intent intent = new android.content.Intent(ViewHotelActivity.this,HotelBookingActivity.class);
-               startActivity(intent);
+            public void onClick(View view) {
+                if (currentUser != null) {
+                    String userId = currentUser.getUid();
+                    String checkIn = checkInDate.getText().toString();
+                    String checkOut = checkOutDate.getText().toString();
+
+                    if (available != null && available) {
+                        if (checkIn.isEmpty()) {
+                            checkInDate.setError("Please select a check-in date");
+                            return;
+                        } else {
+                            checkInDate.setError(null); // Clear error if check-in date is provided
+                        }
+
+                        if (checkOut.isEmpty()) {
+                            checkOutDate.setError("Please select a check-out date");
+                            return;
+                        } else {
+                            checkOutDate.setError(null); // Clear error if check-out date is provided
+                        }
+
+
+                        HotelBooking hotelBooking = new HotelBooking(name, location, ratingBar.getRating(), imageUrl, pricePerNight, available, checkIn, checkOut);
+
+                        bookingsDB.child(userId).child(hotelId).setValue(hotelBooking)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(ViewHotelActivity.this, "Booking successful", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(ViewHotelActivity.this, "Booking failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(ViewHotelActivity.this, "This hotel is not available", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(ViewHotelActivity.this, "You need to be signed in to book a hotel", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-
     }
-    private void showDatePickerDialog(final android.widget.EditText dateEditText) {
-        android.app.DatePickerDialog datePickerDialog = new android.app.DatePickerDialog(
+
+    private void showDatePickerDialog(final EditText dateEditText) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
                 ViewHotelActivity.this,
-                new android.app.DatePickerDialog.OnDateSetListener() {
+                new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
                         dateEditText.setText(selectedDate);
                     }
                 }, year, month, day);
 
-        // Set the minimum date to the current date
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
         datePickerDialog.show();
