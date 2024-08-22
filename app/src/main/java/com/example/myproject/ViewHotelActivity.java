@@ -130,4 +130,21 @@ public class ViewHotelActivity extends AppCompatActivity {
 
 
     }
+    private void showDatePickerDialog(final android.widget.EditText dateEditText) {
+        android.app.DatePickerDialog datePickerDialog = new android.app.DatePickerDialog(
+                ViewHotelActivity.this,
+                new android.app.DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
+                        String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                        dateEditText.setText(selectedDate);
+                    }
+                }, year, month, day);
+
+        // Set the minimum date to the current date
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
+        datePickerDialog.show();
+    }
+
 }
