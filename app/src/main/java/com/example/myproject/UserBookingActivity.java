@@ -20,5 +20,13 @@ public class UserBookingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_booking);
 
+        listViewBookings = findViewById(R.id.listViewBookings);
+        bookingList = new java.util.ArrayList<>();
+        bookingAdapter = new BookingAdapter(this, bookingList);
+
+        listViewBookings.setAdapter(bookingAdapter);
+
+        currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        bookingsDB = com.google.firebase.database.FirebaseDatabase.getInstance().getReference("bookings");
     }
 }
