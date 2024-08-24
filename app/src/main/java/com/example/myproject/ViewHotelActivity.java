@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +66,14 @@ public class ViewHotelActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+        LinearLayout bookingSection = findViewById(R.id.booking_section);
+        if(currentUser.getEmail().equals("manager@gmail.com")){
+            bookingSection.setVisibility(View.GONE);
+        } else {
+            bookingSection.setVisibility(View.VISIBLE);
+
+        }
+
         hotelsDB = FirebaseDatabase.getInstance().getReference("hotels");
         bookingsDB = FirebaseDatabase.getInstance().getReference("bookings");
 
@@ -77,7 +86,7 @@ public class ViewHotelActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        // Retrieve hotel data
+
                         name = snapshot.child("name").getValue(String.class);
                         location = snapshot.child("location").getValue(String.class);
                         rating = snapshot.child("rating").getValue(Double.class);
@@ -95,7 +104,7 @@ public class ViewHotelActivity extends AppCompatActivity {
                         if (imageUrl != null && !imageUrl.isEmpty()) {
                             Picasso.get()
                                     .load(imageUrl)
-//                                    .placeholder(R.drawable.placeholder_image) // Placeholder image
+//                                    .placeholder(R.drawable.placeholder_image)
                                     .into(hotelImage);
                         }
                     } else {
@@ -115,6 +124,7 @@ public class ViewHotelActivity extends AppCompatActivity {
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
+
 
         checkInDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,18 +154,19 @@ public class ViewHotelActivity extends AppCompatActivity {
                             checkInDate.setError("Please select a check-in date");
                             return;
                         } else {
-                            checkInDate.setError(null); // Clear error if check-in date is provided
+                            checkInDate.setError(null);
                         }
 
                         if (checkOut.isEmpty()) {
                             checkOutDate.setError("Please select a check-out date");
                             return;
                         } else {
-                            checkOutDate.setError(null); // Clear error if check-out date is provided
+                            checkOutDate.setError(null);
                         }
 
 
                         HotelBooking hotelBooking = new HotelBooking(name, location, ratingBar.getRating(), imageUrl, pricePerNight, available, checkIn, checkOut);
+
 
                         bookingsDB.child(userId).child(hotelId).setValue(hotelBooking)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -191,6 +202,7 @@ public class ViewHotelActivity extends AppCompatActivity {
                         dateEditText.setText(selectedDate);
                     }
                 }, year, month, day);
+
 
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
