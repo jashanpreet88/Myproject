@@ -26,7 +26,7 @@ public class BookingAdapter  extends android.widget.BaseAdapter {
     @Override
     public android.view.View getView(int position, android.view.View convertView, android.view.ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_booking, parent, false);
+            convertView = android.view.LayoutInflater.from(context).inflate(R.layout.item_booking, parent, false);
         }
 
         HotelBooking booking = bookings.get(position);
