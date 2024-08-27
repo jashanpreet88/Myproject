@@ -9,11 +9,17 @@ import android.view.View;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.AuthResult;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 public class LoginPage extends AppCompatActivity {
 
@@ -25,7 +31,7 @@ public class LoginPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // EdgeToEdge.enable(this); // Ensure this is a valid class or remove if not needed
         setContentView(R.layout.activity_login_page);
 
         username = findViewById(R.id.usernamelogin);
@@ -76,36 +82,40 @@ public class LoginPage extends AppCompatActivity {
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Login success
-                        com.google.firebase.auth.FirebaseUser user = mAuth.getCurrentUser();
-                        if(email.equals("manager@gmail.com")){
-                        Intent intent  = new android.content.Intent(LoginPage.this,AdminActivity.class);
-                        startActivity(intent);
-                        }else {
-                            Intent intent  = new android.content.Intent(LoginPage.this,MainActivity.class);
-                            startActivity(intent);
-                        }
-                        finish();
-                    } else {
-
-                        String errorMessage = "Authentication failed.";
-                        try {
-                            throw task.getException();
-                        } catch (com.google.firebase.auth.FirebaseAuthInvalidUserException e) {
-                            errorMessage = "User does not exist.";
-                        } catch (com.google.firebase.auth.FirebaseAuthInvalidCredentialsException e) {
-                            errorMessage = "Invalid password.";
-                        } catch (Exception e) {
-                            errorMessage = e.getMessage();
-                        }
-                        android.widget.Toast.makeText(LoginPage.this, errorMessage, android.widget.Toast.LENGTH_LONG).show();
+        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(LoginPage.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginPage.this, email, Toast.LENGTH_SHORT).show();
+                    if(email.equals("manager@gmail.com")){
+                        startActivity(new Intent(LoginPage.this, AdminActivity.class));
+                    }else {
+                        startActivity(new android.content.Intent(LoginPage.this, MainActivity.class));
                     }
-                });
+                    finish();
 
-
-
+                }else {
+                    String errorMessage = "Authentication failed.";
+                    try {
+                        throw task.getException();
+                    } catch (FirebaseAuthWeakPasswordException e) {
+                        errorMessage = "Weak password.";
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                        errorMessage = "Invalid email.";
+                    } catch (FirebaseAuthUserCollisionException e) {
+                        errorMessage = "User with this email already exists.";
+                    } catch (Exception e) {
+                        errorMessage = e.getMessage();
+                    }
+                    Toast.makeText(LoginPage.this, errorMessage, Toast.LENGTH_LONG).show();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                android.widget.Toast.makeText(LoginPage.this, "Login failed!", android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
