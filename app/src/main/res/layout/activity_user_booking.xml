@@ -6,7 +6,7 @@
     android:padding="16dp">
 
     <TextView
-        android:text="My Bookings"
+        android:text="Bookings"
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

@@ -75,7 +75,7 @@
         android:id="@+id/imageView"
         android:layout_width="200dp"
         android:layout_height="150dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/roomrover"
         android:layout_gravity="center" />
 
 </LinearLayout>
