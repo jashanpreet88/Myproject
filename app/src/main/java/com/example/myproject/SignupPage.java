@@ -85,7 +85,7 @@ public class SignupPage extends AppCompatActivity {
             return;
         }
 
-//create user with email and passwordd
+
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -109,7 +109,7 @@ public class SignupPage extends AppCompatActivity {
                         }
                     });
                 } else {
-                    // User registration failed
+
                     String errorMessage = "Authentication failed.";
                     try {
                         throw task.getException();
